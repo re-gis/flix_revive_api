@@ -1,0 +1,11 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "postgres",
+  "password": "Password@2001",
+  "database": "revive-db",
+  "synchronize": true,
+  "logging": true,
+  "entities": ["dist/**/*.entity.js"]
+}
