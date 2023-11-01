@@ -1,4 +1,21 @@
-import { Controller } from '@nestjs/common';
+/* eslint-disable */
+import { Controller, Patch, UseGuards, Body } from '@nestjs/common';
+import { UserService } from './user.service';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { GetUser } from 'src/decorators/user.decorator';
+import { User } from 'src/entities/user.entity';
+import { ApiResponse } from 'src/payload/ApiResponse';
 
-@Controller('user')
-export class UserController {}
+@Controller('/api/v1/user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Patch('/update')
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(
+    @GetUser() user: User,
+    @Body() attrs: Partial<User>,
+  ): Promise<ApiResponse> {
+    return this.userService.updateUser(user.email, attrs);
+  }
+}

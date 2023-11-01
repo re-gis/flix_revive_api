@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UtilsModule } from './utils/utils.module';
 import { CustomExceptionFilter } from './exceptions/custom-exception.filter';
+import { User } from './entities/user.entity';
+import { Movie } from './entities/movie.entity';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { CustomExceptionFilter } from './exceptions/custom-exception.filter';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASS'),
         database: configService.get('DB_NAME'),
-        entities: [],
+        entities: [User, Movie],
         synchronize: true,
       }),
       inject: [ConfigService],

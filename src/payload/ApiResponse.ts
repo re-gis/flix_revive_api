@@ -1,4 +1,8 @@
 /* eslint-disable */
 export class ApiResponse {
-  constructor(success: boolean, message?: string, data?: any) {}
+  constructor(
+    public success: boolean,
+    public message?: string,
+    public data?: any,
+  ) {}
 }

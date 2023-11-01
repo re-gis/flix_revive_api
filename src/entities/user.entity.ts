@@ -17,7 +17,11 @@ export class User extends InitiatorAudit {
   @Column({ nullable: false })
   password: string;
 
-  @Column({ nullable: false })
+  @Column({
+    nullable: false,
+    default:
+      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vectorstock.com%2Froyalty-free-vectors%2Fdefault-profile-vectors&psig=AOvVaw3qTzfNqTR5eBmII2eBQ2sD&ust=1698901557731000&source=images&cd=vfe&ved=0CBIQjRxqFwoTCNjq6tODooIDFQAAAAAdAAAAABAE',
+  })
   image?: string;
 
   @Column({ default: false })
