@@ -9,6 +9,7 @@ import { ApiResponse } from 'src/payload/ApiResponse';
 import { UtilsService } from 'src/utils/utils.service';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { deleteAccntDto } from 'src/dtos/DeleteAccntDto';
 
 @Injectable()
 export class UserService {
@@ -109,8 +110,28 @@ export class UserService {
     }
   }
 
-  async deleteAccnt(email: string): Promise<ApiResponse> {
+  async deleteAccnt(email: string, dto: deleteAccntDto): Promise<ApiResponse> {
     try {
+      // get logged in user
+      const eUser = await this.userRepository.findOne({
+        where: { email: email },
+      });
+
+      if (!eUser) {
+        return new ApiResponse(false, 'User not found!');
+      }
+
+      // get password
+      if (!dto.password) {
+        return new ApiResponse(false, 'Password required to delete account!');
+      }
+
+      if (!(await bcrypt.compare(dto.password, eUser.password))) {
+        return new ApiResponse(false, 'Invalid password!');
+      }
+
+      await this.userRepository.remove(eUser);
+      return new ApiResponse(true, 'User account deleted successfully!');
     } catch (e) {
       throw new CustomException(
         'Internal server error...',
