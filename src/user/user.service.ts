@@ -139,4 +139,23 @@ export class UserService {
       );
     }
   }
+
+  async getLoggedUser(email: string): Promise<User | string> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email: email },
+      });
+
+      if (!user) {
+        return 'User not found!';
+      }
+
+      return user;
+    } catch (e) {
+      throw new CustomException(
+        'Internal server error...',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

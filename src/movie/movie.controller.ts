@@ -14,6 +14,8 @@ import { ApiResponse } from 'src/payload/ApiResponse';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { IsAdminGuard } from 'src/guards/is-admin.guard';
+import { GetUser } from 'src/decorators/user.decorator';
+import { User } from 'src/entities/user.entity';
 
 @Controller('/api/v1/movie')
 export class MovieController {
@@ -27,12 +29,12 @@ export class MovieController {
     ]),
   )
   @UseGuards(JwtAuthGuard)
-  @UseGuards(IsAdminGuard)
   async createMovie(
     @UploadedFiles()
     files: { image: Express.Multer.File[]; video: Express.Multer.File[] },
     @Body() dto: CreateMovieDto,
+    @GetUser() user: User,
   ): Promise<ApiResponse> {
-    return this.movieService.createMovie(files.image[0], files.video[0], dto);
+    return this.movieService.createMovie(files.image[0], files.video[0], dto, user.email);
   }
 }
