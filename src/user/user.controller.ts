@@ -22,7 +22,10 @@ export class UserController {
 
   @Delete('/delete-account')
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@GetUser() user: User, @Body() dto:deleteAccntDto): Promise<ApiResponse> {
+  async deleteUser(
+    @GetUser() user: User,
+    @Body() dto: deleteAccntDto,
+  ): Promise<ApiResponse> {
     return this.userService.deleteAccnt(user.email, dto);
   }
 }

@@ -2,6 +2,9 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
+  Patch,
   Post,
   UploadedFile,
   UploadedFiles,
@@ -16,6 +19,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { IsAdminGuard } from 'src/guards/is-admin.guard';
 import { GetUser } from 'src/decorators/user.decorator';
 import { User } from 'src/entities/user.entity';
+import { Movie } from 'src/entities/movie.entity';
 
 @Controller('/api/v1/movie')
 export class MovieController {
@@ -35,6 +39,36 @@ export class MovieController {
     @Body() dto: CreateMovieDto,
     @GetUser() user: User,
   ): Promise<ApiResponse> {
-    return this.movieService.createMovie(files.image[0], files.video[0], dto, user.email);
+    return this.movieService.createMovie(
+      files.image[0],
+      files.video[0],
+      dto,
+      user.email,
+    );
+  }
+
+  @Get('/all')
+  @UseGuards(JwtAuthGuard)
+  async getAllMovies(@GetUser() user: User): Promise<ApiResponse> {
+    return this.movieService.getAllMovies(user.email);
+  }
+
+  @Get('/:id')
+  @UseGuards(JwtAuthGuard)
+  async getOneMovie(
+    @GetUser() user: User,
+    @Param('id') id: number,
+  ): Promise<ApiResponse> {
+    return this.movieService.getOneMovies(id, user.email);
+  }
+
+  @Patch('/update/:id')
+  @UseGuards(JwtAuthGuard)
+  async updateMovie(
+    @GetUser() user: User,
+    @Param('id') id: number,
+    @Body() attrs: Partial<Movie>,
+  ): Promise<ApiResponse> {
+    return this.movieService.updateMovie(id, user.email, attrs);
   }
 }
