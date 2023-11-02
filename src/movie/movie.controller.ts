@@ -2,6 +2,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -20,6 +21,7 @@ import { IsAdminGuard } from 'src/guards/is-admin.guard';
 import { GetUser } from 'src/decorators/user.decorator';
 import { User } from 'src/entities/user.entity';
 import { Movie } from 'src/entities/movie.entity';
+import { CreareReviewDto } from 'src/dtos/CreareReviewDto';
 
 @Controller('/api/v1/movie')
 export class MovieController {
@@ -70,5 +72,29 @@ export class MovieController {
     @Body() attrs: Partial<Movie>,
   ): Promise<ApiResponse> {
     return this.movieService.updateMovie(id, user.email, attrs);
+  }
+
+  @Delete('/delete/:id')
+  @UseGuards(JwtAuthGuard)
+  async deleteMovie(
+    @GetUser() u: User,
+    @Param('id') id: number,
+  ): Promise<ApiResponse> {
+    return this.movieService.deleteMovie(id, u.email);
+  }
+
+  @Patch('/review/:id')
+  @UseGuards(JwtAuthGuard)
+  async createReview(
+    @GetUser() user: User,
+    @Param('id') id: number,
+    @Body() dto: CreareReviewDto,
+  ): Promise<ApiResponse> {
+    return this.movieService.createReview(
+      dto.rating,
+      user.email,
+      dto.comment,
+      id,
+    );
   }
 }

@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import { Column, Entity, NumericType, PrimaryGeneratedColumn } from 'typeorm';
+import { Review } from './Review.entity';
 
 @Entity('movies')
 export class Movie {
@@ -25,6 +26,9 @@ export class Movie {
   @Column({ nullable: false })
   video: string;
 
+  @Column('varchar', { array: true, nullable: true })
+  reviews: Review[];
+
   @Column({ nullable: true })
   rate: number;
 
@@ -35,6 +39,7 @@ export class Movie {
     category: string,
     language: string,
     video: string,
+    reviews: Review[],
     rate?: number,
   ) {
     this.name = name;
@@ -44,5 +49,6 @@ export class Movie {
     this.video = video;
     this.language = language;
     this.rate = rate;
+    this.reviews = reviews;
   }
 }

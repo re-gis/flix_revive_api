@@ -13,6 +13,7 @@ import { Movie } from './entities/movie.entity';
 import { MovieModule } from './movie/movie.module';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { Review } from './entities/Review.entity';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASS'),
         database: configService.get('DB_NAME'),
-        entities: [User, Movie],
+        entities: [User, Movie, Review],
         synchronize: true,
       }),
       inject: [ConfigService],

@@ -12,9 +12,10 @@ import { UtilsService } from 'src/utils/utils.service';
 import { JwtModule } from '@nestjs/jwt';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { Review } from 'src/entities/Review.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Movie, User]), UserModule, UtilsModule, JwtModule, CloudinaryModule],
+  imports:[TypeOrmModule.forFeature([Movie, User, Review]), UserModule, UtilsModule, JwtModule, CloudinaryModule],
   controllers: [MovieController],
   providers: [MovieService, UserService, UtilsService, CloudinaryService]
 })
