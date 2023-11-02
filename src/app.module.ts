@@ -10,6 +10,9 @@ import { UtilsModule } from './utils/utils.module';
 import { CustomExceptionFilter } from './exceptions/custom-exception.filter';
 import { User } from './entities/user.entity';
 import { Movie } from './entities/movie.entity';
+import { MovieModule } from './movie/movie.module';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -33,6 +36,8 @@ import { Movie } from './entities/movie.entity';
     UserModule,
     AuthModule,
     UtilsModule,
+    MovieModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [
@@ -41,6 +46,7 @@ import { Movie } from './entities/movie.entity';
       provide: APP_FILTER,
       useClass: CustomExceptionFilter,
     },
+    CloudinaryService,
   ],
 })
 export class AppModule {}

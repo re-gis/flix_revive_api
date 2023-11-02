@@ -7,7 +7,7 @@ export class Movie {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   name: string;
 
   @Column({ nullable: false })
@@ -25,7 +25,7 @@ export class Movie {
   @Column({ nullable: false })
   video: string;
 
-  @Column()
+  @Column({ nullable: true })
   rate: number;
 
   constructor(
