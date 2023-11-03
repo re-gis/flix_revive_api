@@ -92,7 +92,7 @@ export class MovieService {
     }
   }
 
-  async getAllMovies(email): Promise<ApiResponse> {
+  async getAllMovies(email: string): Promise<ApiResponse> {
     try {
       // first login
       const user = await this.userRepository.findOne({
@@ -228,6 +228,10 @@ export class MovieService {
         return new ApiResponse(false, 'User not found!');
       }
 
+      if (rating > 5) {
+        return new ApiResponse(false, 'Rating must be at most 5...');
+      }
+
       const movie: Movie = await this.movieRepository.findOne({
         where: { id },
       });
@@ -235,11 +239,15 @@ export class MovieService {
         return new ApiResponse(false, `Movie ${id} not found!`);
       }
 
+      const eRev = await this.reviewRepository.findOne({
+        where: { movie: id, user: email },
+      });
+      if (eRev) {
+        return new ApiResponse(false, `Movie ${movie.name} already reviewed!`);
+      }
+
       // check if it already reviewed
-      if (
-        movie.reviews != null &&
-        movie.reviews.find((r) => r.user.toString() === user.email.toString())
-      ) {
+      if (movie.reviews.find((r) => r.user == user.email)) {
         return new ApiResponse(false, `Movie ${movie.name} already reviewed!`);
       }
 
@@ -252,6 +260,9 @@ export class MovieService {
       });
 
       await this.reviewRepository.save(r);
+      if (typeof rating !== 'number' || isNaN(rating)) {
+        return new ApiResponse(false, 'Invalid rating value');
+      }
       movie.reviews.push(r);
       movie.rate =
         movie.reviews.reduce((acc, item) => item.rating + acc, 0) /

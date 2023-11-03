@@ -14,6 +14,7 @@ import { MovieModule } from './movie/movie.module';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { Review } from './entities/Review.entity';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { Review } from './entities/Review.entity';
     UtilsModule,
     MovieModule,
     CloudinaryModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [

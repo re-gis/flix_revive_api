@@ -10,12 +10,14 @@ import { UtilsService } from 'src/utils/utils.service';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { deleteAccntDto } from 'src/dtos/DeleteAccntDto';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) public userRepository: Repository<User>,
     private utilsService: UtilsService,
+    private mailerService: MailerService,
   ) {}
 
   async registerUser(dto: RegisterDto): Promise<ApiResponse> {
@@ -36,6 +38,16 @@ export class UserService {
         const uToCreate = new User(fullname, email, password, isAdmin);
         uToCreate.password = await this.utilsService.hashPassword(password);
         try {
+          // send email
+          if (
+            !(await this.mailerService.sendEmail(
+              email,
+              `http://localhost:3000/auth/verify/${email}`,
+            ))
+          ) {
+            return new ApiResponse(false, 'Error while sending the email...');
+          }
+
           const userEntity = await this.userRepository.create(uToCreate);
           const createdUser = await this.userRepository.save({
             ...userEntity,

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Column, Entity, NumericType, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, NumericType, PrimaryGeneratedColumn } from 'typeorm';
 import { Review } from './Review.entity';
 
 @Entity('movies')
@@ -29,8 +29,16 @@ export class Movie {
   @Column('varchar', { array: true, nullable: true })
   reviews: Review[];
 
-  @Column({ nullable: true })
+  @Column('numeric', { nullable: true })
   rate: number;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  initializeReviews() {
+    if (!this.reviews) {
+      this.reviews = [];
+    }
+  }
 
   constructor(
     name: string,
@@ -39,7 +47,7 @@ export class Movie {
     category: string,
     language: string,
     video: string,
-    reviews: Review[],
+    reviews?: Review[],
     rate?: number,
   ) {
     this.name = name;
@@ -49,6 +57,8 @@ export class Movie {
     this.video = video;
     this.language = language;
     this.rate = rate;
-    this.reviews = reviews;
+    if (reviews) {
+      this.reviews = reviews;
+    }
   }
 }
